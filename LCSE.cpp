@@ -31,6 +31,7 @@ void LCSE::kill(Value* V) {
       if (KilledValues.find(Arg) != KilledValues.end()) {
         Unavailable.push_back(Expr);
         KilledValues.insert(Expr->Result);
+        break;
       }
 
   for (auto Iter : Unavailable)
