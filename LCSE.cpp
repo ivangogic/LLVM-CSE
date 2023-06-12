@@ -24,18 +24,19 @@ Value* LCSE::findExpression(const Expression& Expr) const {
 // zbog toga je available vector, a ne set.
 void LCSE::kill(Value* V) {
   std::unordered_set<Value*> KilledValues {{V}};
-  std::vector<std::vector<Expression>::iterator> Unavailable;
+  std::vector<Expression> AvailableAfter;
 
-  for (auto Expr = Available.begin(); Expr != Available.end(); ++Expr)
-    for (auto Arg : Expr->Args)
+  for (auto& Expr : Available) {
+    auto Unavailable = false;
+    for (auto Arg : Expr.Args)
       if (KilledValues.find(Arg) != KilledValues.end()) {
-        Unavailable.push_back(Expr);
-        KilledValues.insert(Expr->Result);
-        break;
+        KilledValues.insert(Expr.Result);
+        Unavailable = true;
       }
-
-  for (auto Iter : Unavailable)
-    Available.erase(Iter);
+    if (!Unavailable)
+      AvailableAfter.push_back(Expr);
+  }
+  Available = std::move(AvailableAfter);
 }
 
 // prolazi kroz instrukcije, ako je neka instrukcija izraz proveri da li taj izraz vec dostupan
