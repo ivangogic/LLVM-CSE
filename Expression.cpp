@@ -65,11 +65,11 @@ bool Expression::operator ==(const Expression& Other) const {
   return false;
 }
 
-void Expression::swapArgument(const unsigned i, Value* Arg)
+void Expression::swapArgs(const std::vector<Value*>& Args)
 {
-  Args[i] = Arg;
+  this->Args = Args;
   if (ExprTyp == BINARY_OP && IsCommutative && Args[0] > Args[1])
-    std::swap(Args[0], Args[1]);
+    std::swap(this->Args[0], this->Args[1]);
 }
 
 std::size_t Expression::hash() const {

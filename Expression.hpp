@@ -35,7 +35,7 @@ struct Expression {
   Expression(Instruction&);
   Expression() = default;
 
-  void swapArgument(const unsigned, Value*);
+  void swapArgs(const std::vector<Value*>&);
 
   bool operator ==(const Expression&) const;
   std::size_t hash() const;

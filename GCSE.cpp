@@ -184,12 +184,14 @@ PHINode* GCSE::findCompositePhi(const Expression& Expr, BasicBlock* BB) {
   auto Predecessors = predecessors(BB);
   PHINode* PN = PHINode::Create(Expr.Typ, std::distance(Predecessors.begin(), Predecessors.end()));
   for (auto PBB : Predecessors) {
-    Expression E = Expr;
-    for (auto i = 0u; i < E.Args.size(); ++i)
+    auto E = Expr;
+    auto Args = E.Args;
+    for (auto i = 0u; i < Args.size(); ++i)
       if (auto PNArg = dyn_cast<PHINode>(E.Args[i]))
         if (std::find(PNArg->block_begin(), PNArg->block_end(), PBB) != PNArg->block_end())
-          // E.Args[i] = PNArg->getIncomingValueForBlock(PBB);
-          E.swapArgument(i, PNArg->getIncomingValueForBlock(PBB));
+          Args[i] = PNArg->getIncomingValueForBlock(PBB);
+
+    E.swapArgs(Args);
     if (ExprVN.find(E) != ExprVN.end() && AvailOUT[PBB][ExprVN[E]]) {
       auto Replacement = findReplacementValue(E, PBB, false);
       PN->addIncoming(Replacement, PBB);
