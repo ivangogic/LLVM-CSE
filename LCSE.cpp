@@ -23,7 +23,7 @@ Value* LCSE::findExpression(const Expression& Expr) const {
 // onda poze da ucestvuje samo u izrazima koji slede nakon izraza u kome je ta vrednost izrazucunata,
 // zbog toga je available vector, a ne set.
 void LCSE::kill(Value* V) {
-  std::unordered_set<Value*> KilledValues {{V}};
+  std::unordered_set<Value*> KilledValues {V};
   std::vector<Expression> AvailableAfter;
 
   for (auto& Expr : Available) {

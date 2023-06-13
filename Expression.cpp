@@ -36,7 +36,7 @@ Expression::Expression(Instruction& Inst) {
       Opcode = CMPI->getSwappedPredicate();
       std::swap(Args[0], Args[1]);
     } else {
-      Opcode = CMPI->getOpcode();
+      Opcode = CMPI->getPredicate();
     }
   }
 }
